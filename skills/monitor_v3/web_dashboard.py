@@ -223,9 +223,9 @@ DASHBOARD_HTML = """
             <div class="card">
                 <h2>📈 Cost Trend</h2>
                 <div class="tab-bar">
-                    <button class="tab active" onclick="switchChart('daily')">Daily</button>
-                    <button class="tab" onclick="switchChart('weekly')">Weekly</button>
-                    <button class="tab" onclick="switchChart('monthly')">Monthly</button>
+                    <button class="tab active" onclick="switchChart('daily', this)">Daily</button>
+                    <button class="tab" onclick="switchChart('weekly', this)">Weekly</button>
+                    <button class="tab" onclick="switchChart('monthly', this)">Monthly</button>
                 </div>
                 <div id="costChart" class="chart-container"></div>
             </div>
@@ -316,15 +316,20 @@ DASHBOARD_HTML = """
                 });
         }
         
-        function switchChart(period) {
+        function switchChart(period, btn) {
             currentPeriod = period;
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
+            btn.classList.add('active');
             updateChart(period);
         }
         
-        // Initial chart
+        // Initial chart load
         updateChart('daily');
+        
+        // Load chart on page load
+        window.addEventListener('load', function() {
+            updateChart('daily');
+        });
         
         window.addEventListener('resize', function() {
             costChart.resize();
