@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """
-Agent Monitor Web Dashboard v2
+Agent Monitor Web Dashboard v2.1
 
-Enhanced with ECharts for real-time charts
+Enhanced with:
+- Working chart switching (daily/weekly/monthly)
+- API documentation section
+- Agent operations (restart, pause)
 """
 
 from flask import Flask, render_template_string, jsonify, request
@@ -11,11 +14,10 @@ import os
 
 app = Flask(__name__, template_folder='templates')
 
-# Default port
 DEFAULT_PORT = 8080
 
 # ============================================================================
-# Mock Data Functions (Replace with real data in production)
+# Mock Data Functions
 # ============================================================================
 
 def get_mock_agents():
@@ -36,36 +38,29 @@ def get_mock_metrics():
         "cost_monthly": 350.00
     }
 
-def get_cost_trend_data():
-    """Cost trend data for ECharts"""
-    days = 14
-    dates = []
-    costs = []
-    
-    for i in range(days):
-        date = datetime.now() - timedelta(days=days - i - 1)
-        dates.append(date.strftime("%m-%d"))
-        costs.append(round(8 + (i % 5) * 2 + (i * 0.3), 2))
+def get_cost_trend_data(period='daily'):
+    """Cost trend data by period"""
+    if period == 'daily':
+        days = 14
+        label = '14 Days'
+        costs = [round(8 + (i % 5) * 2 + (i * 0.3), 2) for i in range(days)]
+        dates = [(datetime.now() - timedelta(days=days - i - 1)).strftime("%m-%d") for i in range(days)]
+    elif period == 'weekly':
+        weeks = 8
+        label = '8 Weeks'
+        costs = [round(50 + i * 5 + (i % 3) * 10, 2) for i in range(weeks)]
+        dates = [f"W{i+1}" for i in range(weeks)]
+    else:  # monthly
+        months = 6
+        label = '6 Months'
+        costs = [round(200 + i * 30 + (i % 2) * 50, 2) for i in range(months)]
+        dates = [(datetime.now() - timedelta(days=30 * (months - i - 1))).strftime("%Y-%m") for i in range(months)]
     
     return {
+        "period": period,
+        "label": label,
         "dates": dates,
         "costs": costs
-    }
-
-def get_request_trend_data():
-    """Request trend data for ECharts"""
-    hours = 24
-    times = []
-    requests = []
-    
-    for i in range(hours):
-        hour = datetime.now() - timedelta(hours=hours - i - 1)
-        times.append(hour.strftime("%H:00"))
-        requests.append(50 + (i % 10) * 5 + (i * 2))
-    
-    return {
-        "times": times,
-        "requests": requests
     }
 
 def get_mock_alerts():
@@ -76,7 +71,43 @@ def get_mock_alerts():
     ]
 
 # ============================================================================
-# HTML Template with ECharts
+# API Documentation
+# ============================================================================
+
+API_DOCS = """
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/agents | List all agents |
+| GET | /api/agents/&lt;id&gt; | Get agent details |
+| GET | /api/metrics | Get metrics summary |
+| GET | /api/cost-trend | Get cost trend (daily) |
+| GET | /api/cost-trend?period=weekly | Get weekly trend |
+| GET | /api/alerts | Get alerts |
+| POST | /api/agents/&lt;id&gt;/restart | Restart agent |
+| POST | /api/agents/&lt;id&gt;/pause | Pause agent |
+| POST | /api/agents/&lt;id&gt;/resume | Resume agent |
+| DELETE | /api/alerts/&lt;id&gt; | Dismiss alert |
+
+## Example Response
+
+```json
+{
+  "agents": [
+    {
+      "id": "agent-001",
+      "name": "Code Generator",
+      "status": "running",
+      "health_score": 92
+    }
+  ]
+}
+```
+"""
+
+# ============================================================================
+# HTML Template
 # ============================================================================
 
 DASHBOARD_HTML = """
@@ -122,29 +153,36 @@ DASHBOARD_HTML = """
         .status-dot.idle { background: #ffc107; }
         .status-dot.failed { background: #ff4757; box-shadow: 0 0 10px #ff4757; }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         
         .health-bar { width: 120px; height: 8px; background: #0f0f23; border-radius: 4px; overflow: hidden; }
         .health-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
         
         .alert-list { display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto; }
-        .alert-item { padding: 15px; border-radius: 12px; border-left: 4px solid; animation: slideIn 0.3s ease; }
+        .alert-item { padding: 15px; border-radius: 12px; border-left: 4px solid; animation: slideIn 0.3s ease; position: relative; }
         .alert-item.critical { background: linear-gradient(90deg, rgba(255,71,87,0.2), transparent); border-color: #ff4757; }
         .alert-item.warning { background: linear-gradient(90deg, rgba(255,193,7,0.2), transparent); border-color: #ffc107; }
         .alert-item.info { background: linear-gradient(90deg, rgba(0,212,255,0.2), transparent); border-color: #00d4ff; }
         
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         
         .tab-bar { display: flex; gap: 10px; margin-bottom: 15px; }
         .tab { padding: 8px 16px; background: #16213e; border: none; border-radius: 8px; color: #888; cursor: pointer; transition: all 0.3s; }
         .tab.active { background: #00d4ff; color: #0f0f23; }
         .tab:hover:not(.active) { background: #1e1e4e; }
+        
+        .btn { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.2s; }
+        .btn-restart { background: #00d4ff; color: #0f0f23; }
+        .btn-pause { background: #ffc107; color: #0f0f23; }
+        .btn-dismiss { background: transparent; color: #666; border: 1px solid #333; }
+        .btn:hover { transform: scale(1.05); }
+        
+        .agent-actions { display: flex; gap: 8px; }
+        
+        .api-doc { background: #0f0f23; padding: 20px; border-radius: 12px; font-family: monospace; font-size: 13px; line-height: 1.6; }
+        .api-doc table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .api-doc td, .api-doc th { padding: 8px; border: 1px solid #333; text-align: left; }
+        .api-doc th { background: #1a1a3e; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0f0f23; }
@@ -194,99 +232,130 @@ DASHBOARD_HTML = """
             
             <div class="card">
                 <h2>⚠️ Recent Alerts</h2>
-                <div class="alert-list">
+                <div class="alert-list" id="alertList">
                     {% for alert in alerts %}
-                    <div class="alert-item {{ alert.level }}">
+                    <div class="alert-item {{ alert.level }}" data-id="{{ alert.id }}">
                         <div style="font-weight: 600;">{{ alert.title }}</div>
                         <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">{{ alert.message }}</div>
                         <div style="font-size: 11px; opacity: 0.5; margin-top: 5px;">{{ alert.time }}</div>
+                        <button class="btn btn-dismiss" style="position: absolute; top: 10px; right: 10px;" onclick="dismissAlert({{ alert.id }})">✕</button>
                     </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
         
-        <div class="card">
-            <h2>🤖 Agent Status</h2>
-            <div class="agents-list">
-                {% for agent in agents %}
-                <div class="agent-item">
-                    <div class="agent-info">
-                        <div class="status-dot {{ agent.status }}"></div>
-                        <div>
-                            <div style="font-weight: 600;">{{ agent.name }}</div>
-                            <div style="font-size: 12px; color: #666;">{{ agent.id }}</div>
+        <div class="main-grid">
+            <div class="card">
+                <h2>🤖 Agent Status</h2>
+                <div class="agents-list" id="agentsList">
+                    {% for agent in agents %}
+                    <div class="agent-item">
+                        <div class="agent-info">
+                            <div class="status-dot {{ agent.status }}"></div>
+                            <div>
+                                <div style="font-weight: 600;">{{ agent.name }}</div>
+                                <div style="font-size: 12px; color: #666;">{{ agent.id }}</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="text-align: right;">
+                                <div class="health-bar">
+                                    <div class="health-fill" style="width: {{ agent.health_score }}%; background: {% if agent.health_score >= 80 %}#00ff88{% elif agent.health_score >= 50 %}#ffc107{% else %}#ff4757{% endif %};"></div>
+                                </div>
+                                <div style="font-size: 12px; color: #888; margin-top: 5px;">{{ agent.health_score }}/100</div>
+                            </div>
+                            <div class="agent-actions">
+                                <button class="btn btn-restart" onclick="restartAgent('{{ agent.id }}')">Restart</button>
+                                <button class="btn btn-pause" onclick="pauseAgent('{{ agent.id }}')">Pause</button>
+                            </div>
                         </div>
                     </div>
-                    <div style="text-align: right;">
-                        <div class="health-bar">
-                            <div class="health-fill" style="width: {{ agent.health_score }}%; background: {% if agent.health_score >= 80 %}#00ff88{% elif agent.health_score >= 50 %}#ffc107{% else %}#ff4757{% endif %};"></div>
-                        </div>
-                        <div style="font-size: 12px; color: #888; margin-top: 5px;">{{ agent.health_score }}/100</div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📚 API Documentation</h2>
+                <div class="api-doc">
+                    <table>
+                        <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                        <tr><td>GET</td><td>/api/agents</td><td>List all agents</td></tr>
+                        <tr><td>GET</td><td>/api/metrics</td><td>Get metrics</td></tr>
+                        <tr><td>GET</td><td>/api/cost-trend?period=weekly</td><td>Cost trend</td></tr>
+                        <tr><td>POST</td><td>/api/agents/&lt;id&gt;/restart</td><td>Restart agent</td></tr>
+                        <tr><td>POST</td><td>/api/agents/&lt;id&gt;/pause</td><td>Pause agent</td></tr>
+                        <tr><td>DELETE</td><td>/api/alerts/&lt;id&gt;</td><td>Dismiss alert</td></tr>
+                    </table>
+                    <div style="margin-top: 10px; color: #666;">
+                        <a href="/api/agents" target="_blank" style="color: #00d4ff;">Try /api/agents</a> |
+                        <a href="/api/metrics" target="_blank" style="color: #00d4ff;">Try /api/metrics</a>
                     </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
     
     <script>
-        // Initialize ECharts
         var costChart = echarts.init(document.getElementById('costChart'));
+        var currentPeriod = 'daily';
         
-        var option = {
-            backgroundColor: 'transparent',
-            grid: { top: 20, right: 20, bottom: 30, left: 50 },
-            xAxis: {
-                type: 'category',
-                data: {{ cost_trend.dates | safe }},
-                axisLine: { lineStyle: { color: '#333' } },
-                axisLabel: { color: '#888' }
-            },
-            yAxis: {
-                type: 'value',
-                axisLine: { lineStyle: { color: '#333' } },
-                axisLabel: { color: '#888', formatter: '$' + '{value}' },
-                splitLine: { lineStyle: { color: '#222' } }
-            },
-            series: [{
-                data: {{ cost_trend.costs | safe }},
-                type: 'line',
-                smooth: true,
-                symbol: 'circle',
-                symbolSize: 8,
-                lineStyle: { color: '#00d4ff', width: 3 },
-                itemStyle: { color: '#00d4ff' },
-                areaStyle: {
-                    color: {
-                        type: 'linear',
-                        x: 0, y: 0, x2: 0, y2: 1,
-                        colorStops: [
-                            { offset: 0, color: 'rgba(0,212,255,0.3)' },
-                            { offset: 1, color: 'rgba(0,212,255,0)' }
-                        ]
-                    }
-                }
-            }],
-            tooltip: {
-                trigger: 'axis',
-                backgroundColor: '#1a1a3e',
-                borderColor: '#333',
-                textStyle: { color: '#fff' }
-            }
-        };
+        function getChartData(period) {
+            var data = {{ cost_trend | tojson }};
+            return data;
+        }
         
-        costChart.setOption(option);
+        function updateChart(period) {
+            fetch('/api/cost-trend?period=' + period)
+                .then(response => response.json())
+                .then(data => {
+                    costChart.setOption({
+                        xAxis: { data: data.dates },
+                        series: [{ data: data.costs }]
+                    });
+                });
+        }
         
-        // Responsive
+        function switchChart(period) {
+            currentPeriod = period;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            updateChart(period);
+        }
+        
+        // Initial chart
+        updateChart('daily');
+        
         window.addEventListener('resize', function() {
             costChart.resize();
         });
         
-        function switchChart(period) {
-            // Update chart based on period
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
+        // Agent operations
+        function restartAgent(agentId) {
+            if (confirm('Restart ' + agentId + '?')) {
+                fetch('/api/agents/' + agentId + '/restart', { method: 'POST' })
+                    .then(r => r.json())
+                    .then(d => alert(d.message || 'Restarted!'))
+                    .catch(e => alert('Error: ' + e));
+            }
+        }
+        
+        function pauseAgent(agentId) {
+            if (confirm('Pause ' + agentId + '?')) {
+                fetch('/api/agents/' + agentId + '/pause', { method: 'POST' })
+                    .then(r => r.json())
+                    .then(d => alert(d.message || 'Paused!'))
+                    .catch(e => alert('Error: ' + e));
+            }
+        }
+        
+        function dismissAlert(alertId) {
+            fetch('/api/alerts/' + alertId, { method: 'DELETE' })
+                .then(r => r.json())
+                .then(d => {
+                    document.querySelector('[data-id="' + alertId + '"]').remove();
+                })
+                .catch(e => alert('Error: ' + e));
         }
     </script>
 </body>
@@ -303,7 +372,7 @@ def index():
         agents=get_mock_agents(),
         metrics=get_mock_metrics(),
         alerts=get_mock_alerts(),
-        cost_trend=get_cost_trend_data(),
+        cost_trend=get_cost_trend_data('daily'),
         time=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     )
 
@@ -311,21 +380,42 @@ def index():
 def api_agents():
     return jsonify(get_mock_agents())
 
+@app.route('/api/agents/<agent_id>')
+def api_agent(agent_id):
+    agents = get_mock_agents()
+    for a in agents:
+        if a['id'] == agent_id:
+            return jsonify(a)
+    return jsonify({'error': 'Not found'}), 404
+
 @app.route('/api/metrics')
 def api_metrics():
     return jsonify(get_mock_metrics())
 
 @app.route('/api/cost-trend')
 def api_cost_trend():
-    return jsonify(get_cost_trend_data())
-
-@app.route('/api/request-trend')
-def api_request_trend():
-    return jsonify(get_request_trend_data())
+    period = request.args.get('period', 'daily')
+    return jsonify(get_cost_trend_data(period))
 
 @app.route('/api/alerts')
 def api_alerts():
     return jsonify(get_mock_alerts())
+
+@app.route('/api/agents/<agent_id>/restart', methods=['POST'])
+def api_restart(agent_id):
+    return jsonify({'status': 'success', 'message': f'Agent {agent_id} restarted'})
+
+@app.route('/api/agents/<agent_id>/pause', methods=['POST'])
+def api_pause(agent_id):
+    return jsonify({'status': 'success', 'message': f'Agent {agent_id} paused'})
+
+@app.route('/api/agents/<agent_id>/resume', methods=['POST'])
+def api_resume(agent_id):
+    return jsonify({'status': 'success', 'message': f'Agent {agent_id} resumed'})
+
+@app.route('/api/alerts/<alert_id>', methods=['DELETE'])
+def api_dismiss_alert(alert_id):
+    return jsonify({'status': 'success', 'message': f'Alert {alert_id} dismissed'})
 
 @app.route('/health')
 def health():
@@ -337,7 +427,7 @@ def health():
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', DEFAULT_PORT))
-    print(f"\n🚀 Agent Monitor Dashboard v2")
+    print(f"\n🚀 Agent Monitor Dashboard v2.1")
     print(f"   URL: http://localhost:{port}")
     print(f"   API: http://localhost:{port}/api/agents\n")
     
