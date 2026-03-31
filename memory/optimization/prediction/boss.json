@@ -1,0 +1,10 @@
+{
+  "updated_at": "2026-03-15T01:23:00Z",
+  "predictions": [
+    {"pattern": "分析", "next_ops": ["web_search", "spawn_analysis"], "confidence": 0.7},
+    {"pattern": "技能", "next_ops": ["list_skills", "install_skill"], "confidence": 0.8},
+    {"pattern": "設定", "next_ops": ["update_config", "apply_skill"], "confidence": 0.6}
+  ],
+  "recent_predictions": [],
+  "success_rate": 0.0
+}

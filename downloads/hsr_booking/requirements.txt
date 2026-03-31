@@ -1,0 +1,5 @@
+# 高鐵訂票系統依賴
+aiohttp>=3.9.0
+pydantic>=2.0
+python-dateutil>=2.8
+toml>=0.10

@@ -1,0 +1,7 @@
+{
+  "active_hours": "09:00-24:00",
+  "common_patterns": {
+    "morning_checkin": "通常在早上提問",
+    "research_mode": "喜歡深度研究主題"
+  }
+}

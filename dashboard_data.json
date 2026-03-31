@@ -1,0 +1,106 @@
+{
+  "timestamp": "2026-03-18T22:00:28.168617",
+  "annual_goals": {
+    "資訊領先": {
+      "current": 10,
+      "target": 52,
+      "unit": "篇"
+    },
+    "翻譯能力": {
+      "current": 0,
+      "target": 12,
+      "unit": "篇"
+    },
+    "實戰經驗": {
+      "current": 5,
+      "target": 20,
+      "unit": "個"
+    },
+    "落地應用": {
+      "current": 0,
+      "target": 1,
+      "unit": "個"
+    }
+  },
+  "weekly_tasks": {
+    "已完成": 3,
+    "進行中": 2,
+    "待處理": 5
+  },
+  "blockers": [
+    {
+      "icon": "⚠️",
+      "text": "GitHub 尚未初始化",
+      "owner": "self"
+    },
+    {
+      "icon": "⏸️",
+      "text": "等待 Johnny 回饋（投影片/影片審核）",
+      "owner": "Johnny"
+    },
+    {
+      "icon": "⏳",
+      "text": "TDX API 審核中（已改用 PDF 方案）",
+      "owner": "self"
+    }
+  ],
+  "todos": [
+    {
+      "text": "GitHub Repo 初始化 + push",
+      "status": "pending",
+      "owner": "self"
+    },
+    {
+      "text": "高鐵 v1 時刻表功能優化",
+      "status": "pending",
+      "owner": "self"
+    },
+    {
+      "text": "投影片/影片根據回饋調整",
+      "status": "pending",
+      "owner": "self"
+    },
+    {
+      "text": "Heartbeat 演化 + 自動化",
+      "status": "done",
+      "owner": "self"
+    }
+  ],
+  "trend_data": {
+    "labels": [
+      "W1",
+      "W2",
+      "W3",
+      "W4"
+    ],
+    "values": [
+      3,
+      5,
+      3,
+      0
+    ]
+  },
+  "tools_data": {
+    "labels": [
+      "AI Chat",
+      "Agent",
+      "Dev",
+      "Tools",
+      "Other"
+    ],
+    "tested": [
+      2,
+      1,
+      1,
+      1,
+      0
+    ],
+    "target": [
+      5,
+      5,
+      5,
+      5,
+      0
+    ]
+  }
+}

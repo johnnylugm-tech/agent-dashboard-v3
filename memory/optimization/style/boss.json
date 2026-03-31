@@ -1,0 +1,14 @@
+{
+  "updated_at": "2026-03-15T01:23:00Z",
+  "current_style": {
+    "tone": "專業、簡潔、貼心",
+    "length": "短",
+    "format": ["條列式", "Markdown表格"],
+    "emoji": "🚀"
+  },
+  "learning": {
+    "total_samples": 29,
+    "adaptation_level": "learning"
+  },
+  "patterns": []
+}

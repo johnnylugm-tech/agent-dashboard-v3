@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "protected_at": "2026-03-15T01:22:00Z",
+  "rules": {
+    "no_clear": true,
+    "no_reset": true,
+    "no_delete": true,
+    "immutable": true
+  },
+  "protected_paths": [
+    "memory/longterm/*",
+    "memory/knowledge/*",
+    "memory/tasks/*",
+    "memory/goals/*",
+    "IDENTITY.md",
+    "SOUL.md",
+    "USER.md",
+    "MEMORY.md"
+  ],
+  "emergency_override": false
+}

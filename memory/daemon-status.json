@@ -1,0 +1,18 @@
+{
+  "daemon": {
+    "name": "musk-agent",
+    "status": "running",
+    "started_at": "2026-03-15T01:19:00Z",
+    "gateway": {
+      "service": "ai.openclaw.gateway",
+      "status": "active",
+      "auto_restart": true,
+      "run_at_load": true
+    }
+  },
+  "monitoring": {
+    "heartbeat_interval": 900,
+    "health_check": true,
+    "crash_recovery": true
+  }
+}

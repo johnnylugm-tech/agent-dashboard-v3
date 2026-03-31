@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "rules": {
+    "default_length": "3行以內",
+    "use_emoji": "🚀",
+    "format_preference": "條列式",
+    "always_include_action": true,
+    "proactive_suggest": true
+  },
+  "style_markers": {
+    "liked": ["直接", "數據", "step by step"],
+    "disliked": ["廢話", "冗長", "模糊"]
+  }
+}

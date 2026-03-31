@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>THSR Test</title>
+    <style>
+        select { padding: 10px; margin: 5px; }
+        .result { margin-top: 20px; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>高鐵訂票測試</h1>
+    
+    <select id="fromStation">
+        <option value="">請選擇...</option>
+        <option value="1">南港</option>
+        <option value="2">台北</option>
+        <option value="3">板橋</option>
+        <option value="4">桃園</option>
+        <option value="5" selected>新竹</option>
+        <option value="6">苗栗</option>
+        <option value="7">台中</option>
+        <option value="8">彰化</option>
+        <option value="9">雲林</option>
+        <option value="10">嘉義</option>
+        <option value="11">台南</option>
+        <option value="12">左營</option>
+    </select>
+    
+    <br>
+    
+    <select id="toStation">
+        <option value="">請選擇...</option>
+        <option value="1">南港</option>
+        <option value="2">台北</option>
+        <option value="3">板橋</option>
+        <option value="4">桃園</option>
+        <option value="5">新竹</option>
+        <option value="6">苗栗</option>
+        <option value="7">台中</option>
+        <option value="8">彰化</option>
+        <option value="9">雲林</option>
+        <option value="10">嘉義</option>
+        <option value="11">台南</option>
+        <option value="12" selected>左營</option>
+    </select>
+    
+    <br><br>
+    <button onclick="showValues()">顯示選擇的值</button>
+    
+    <div class="result" id="result"></div>
+    
+    <script>
+        function showValues() {
+            const from = document.getElementById('fromStation').value;
+            const to = document.getElementById('toStation').value;
+            document.getElementById('result').innerHTML = 
+                '出發站: ' + from + '<br>到達站: ' + to;
+        }
+    </script>
+</body>
+</html>
+    

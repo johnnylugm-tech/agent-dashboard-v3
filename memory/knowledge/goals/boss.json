@@ -1,0 +1,27 @@
+{
+  "updated_at": "2026-03-16T01:05:00Z",
+  "core_mission": "成為世界第一等的AI專家，用AI技術改變世界，提升人們生活的便利性與幸福度",
+  "active_goals": [
+    {
+      "id": "goal_001",
+      "title": "成為世界第一等AI專家",
+      "status": "in_progress",
+      "metrics": ["資訊領先", "翻譯能力", "實戰經驗", "趨勢判斷"],
+      "created": "2026-03-16"
+    },
+    {
+      "id": "goal_002", 
+      "title": "用AI技術改變世界",
+      "status": "planning",
+      "focus_areas": ["AI應用落地", "多Agent協作", "自動化流程"],
+      "created": "2026-03-16"
+    },
+    {
+      "id": "goal_003",
+      "title": "提升人們生活的便利性與幸福度",
+      "status": "planning",
+      "approaches": ["硬核乾貨", "技術翻譯", "實用工具"],
+      "created": "2026-03-16"
+    }
+  ]
+}

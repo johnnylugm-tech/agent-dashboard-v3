@@ -1,0 +1,16 @@
+{
+  "updated_at": "2026-03-15T01:20:00Z",
+  "communication": {
+    "language": "繁體中文",
+    "style": "直接、簡潔、條列式",
+    "format": ["Markdown", "表格", "條列"]
+  },
+  "content": {
+    "likes": ["硬核乾貨", "數據驅動", "step by step", "實際操作"],
+    "dislikes": ["廢話", "冗長解釋", "模糊建議"]
+  },
+  "skills": {
+    "preferred": ["web_search", "sessions_spawn", "memory_search"],
+    "frequently_used": []
+  }
+}
