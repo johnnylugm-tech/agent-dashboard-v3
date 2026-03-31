@@ -115,7 +115,29 @@
 
 ---
 
-### 📋 STAGE_PASS 強化待辦 (v6.12 候選)
+### 📋 SKILL.md 瘦身計畫 (v6.12 候選) ← 第一優先
+
+| 優先 | 項目 | 說明 |
+|------|------|------|
+| 🔴 高 | Agent 核心內容 | Phase 1-8 5W1H、Enforcement BLOCK、L1-L4 錯誤分類、CLI 核心指令 |
+| 🟡 中 | 版本歷史 | → `CHANGELOG.md` |
+| 🟡 中 | 實務案例 | → `docs/cases/` |
+| 🟡 中 | 詳細範例 | → `docs/examples/` |
+| 🟡 中 | CLI 完整指令 | → `docs/CLI_REFERENCE.md` |
+| 🟢 低 | Legacy 功能 | → `docs/legacy/` |
+
+**目標**：從 4,612 行 → ~1,300 行（減少 70%）
+
+**核心原則**：Agent 執行時需要的留在 SKILL.md，參考用的外部化
+
+**結合 v6.03.0 版本**：
+- SKILL.md (核心) → 只放執行時需要的
+- SKILL_TEMPLATES.md → Lazy Load，按需載入
+- SKILL_DOMAIN.md → 領域知識，按需載入
+
+---
+
+### 📋 STAGE_PASS 強化待辦 (v6.13 候選)
 
 | 優先 | 項目 | 說明 |
 |------|------|------|
@@ -132,7 +154,7 @@
 
 ---
 
-### 📋 跨 Agent 驗證待辦 (v6.13 候選)
+### 📋 跨 Agent 驗證待辦 (v6.14 候選)
 
 | 優先 | 項目 | 說明 |
 |------|------|------|
@@ -173,7 +195,7 @@ Agent B (獨立審查，也用 methodology-v2 規範)
 
 ---
 
-### 📋 跨模型分工待辦 (v6.14 候選)
+### 📋 跨模型分工待辦 (v6.15 候選)
 
 | 優先 | 項目 | 說明 |
 |------|------|------|
@@ -202,7 +224,7 @@ Agent B (獨立審查，也用 methodology-v2 規範)
 
 ---
 
-### 📋 GitHub 持久化待辦 (v6.15 候選)
+### 📋 GitHub 持久化待辦 (v6.16 候選)
 
 | 優先 | 項目 | 說明 |
 |------|------|------|
@@ -214,48 +236,7 @@ Agent B (獨立審查，也用 methodology-v2 規範)
 
 ---
 
-### 📋 SKILL.md 瘦身計畫 (v6.16 候選)
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| 🔴 高 | Agent 核心內容 | Phase 1-8 5W1H、Enforcement BLOCK、L1-L4 錯誤分類、CLI 核心指令 |
-| 🟡 中 | 版本歷史 | → `CHANGELOG.md` |
-| 🟡 中 | 實務案例 | → `docs/cases/` |
-| 🟡 中 | 詳細範例 | → `docs/examples/` |
-| 🟡 中 | CLI 完整指令 | → `docs/CLI_REFERENCE.md` |
-| 🟢 低 | Legacy 功能 | → `docs/legacy/` |
-
-**目標**：從 4,612 行 → ~1,300 行（減少 70%）
-
-**核心原則**：Agent 執行時需要的留在 SKILL.md，參考用的外部化
-
-**概念**：
-```
-Step 1 完成 → commit → GitHub
-    ↓
-中斷（網路、模型、工具...）
-    ↓
-恢復 → pull GitHub → 從 Step 2 繼續
-    ↓
-或切換工具/模型 → pull GitHub → 繼續
-```
-
-**Checkpoint 結構**：
-```
-.checkpoints/
-├── phase-1/
-│   ├── step-1-complete.lock
-│   ├── step-1-artifacts/
-│   ├── step-2-complete.lock
-│   └── step-2-artifacts/
-├── phase-2/
-│   └── ...
-└── STATE.md (目前總狀態)
-```
-
-**STATE.md 範例**：
-```markdown
-# 專案狀態
+（以下為 GitHub 持久化章節，完整內容見上方）
 
 ## 目前進度
 - Phase: 3
