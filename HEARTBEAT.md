@@ -183,6 +183,23 @@ Agent B (獨立審查，也用 methodology-v2 規範)
 | 🔴 高 | 工具/模型切換 | 可基於 GitHub 狀態切換不同工具或模型 |
 | 🟡 中 | 狀態追蹤 | 追蹤目前在哪個 step、phase |
 
+---
+
+### 📋 SKILL.md 瘦身計畫 (v6.16 候選)
+
+| 優先 | 項目 | 說明 |
+|------|------|------|
+| 🔴 高 | Agent 核心內容 | Phase 1-8 5W1H、Enforcement BLOCK、L1-L4 錯誤分類、CLI 核心指令 |
+| 🟡 中 | 版本歷史 | → `CHANGELOG.md` |
+| 🟡 中 | 實務案例 | → `docs/cases/` |
+| 🟡 中 | 詳細範例 | → `docs/examples/` |
+| 🟡 中 | CLI 完整指令 | → `docs/CLI_REFERENCE.md` |
+| 🟢 低 | Legacy 功能 | → `docs/legacy/` |
+
+**目標**：從 4,612 行 → ~1,300 行（減少 70%）
+
+**核心原則**：Agent 執行時需要的留在 SKILL.md，參考用的外部化
+
 **概念**：
 ```
 Step 1 完成 → commit → GitHub
