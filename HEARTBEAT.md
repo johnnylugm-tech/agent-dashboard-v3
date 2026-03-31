@@ -115,6 +115,121 @@
 
 ---
 
+### 📋 STAGE_PASS 強化待辦 (v6.12 候選)
+
+| 優先 | 項目 | 說明 |
+|------|------|------|
+| 🔴 高 | 5W1H 逐項檢查 | 真的逐條對照 SKILL.md，不是 FrameworkEnforcer |
+| 🔴 高 | 不符 → 捨棄產出 | 5W1H 任何一項不符就刪除產出並重來 |
+| 🔴 高 | 最終檢核清單 | 明確檢查：問題數量、目標達成、產出物存在 |
+| 🔴 高 | 禁止進入下一 Phase | 最終檢核沒通過，系統性阻擋 |
+
+**Johnny 要求**：
+- 查核日誌必須以 Markdown 檔案格式產生
+- 每階段完成後同步發布到 GitHub
+- 再次檢查是否有 100% 遵從 SKILL.md 5W1H
+- 若有違反 → 捨棄產出，重新開始
+
+---
+
+### 📋 跨 Agent 驗證待辦 (v6.13 候選)
+
+| 優先 | 項目 | 說明 |
+|------|------|------|
+| 🔴 高 | GitHub 作為中介 | Agent A commit → GitHub → Agent B pull 審查 |
+| 🔴 高 | methodology-v2 作為共通語言 | 雙方都用同一套規範 (SKILL.md, 5W1H, Phase 流程) |
+| 🔴 高 | 強制分離實現/審查 | Agent A 實現，Agent B 獨立審查 |
+| 🔴 高 | 審查結果 commit | APPROVE/REJECT 必須 commit 到 GitHub |
+| 🟡 中 | 自動派發審查任務 | Phase 完成後自動派發給下一 Agent |
+| 🟡 中 | Johnny 看 GitHub 事實 | Johnny 確認基於 GitHub 上的實際 commit |
+
+**概念**：
+```
+Agent A (遵循 methodology-v2 規範)
+    │
+    │ 遵循同一套 SKILL.md / 5W1H / Phase 流程
+    │ 任何步驟完成 → commit → GitHub (持久化)
+    ↓
+GitHub (不可篡改的中介 + 狀態持久化)
+    │
+    │ Agent B 也用同一套 methodology-v2 解讀
+    │ 可隨時中斷 → 恢復 → 繼續
+    │ 可切換工具/模型 → 基於 GitHub 狀態繼續
+    ↓
+Agent B (獨立審查，也用 methodology-v2 規範)
+    │
+    │ 雙方都用相同的「語言」溝通
+    │ APPROVE/REJECT → commit → GitHub
+```
+
+**三個角色 GitHub**：
+1. **中介** - Agent A ↔ Agent B 之間的事實傳遞
+2. **持久化** - 任何步驟完成都上傳，中斷可恢復
+3. **切換點** - 可基於 GitHub 狀態切換工具或模型
+
+**雙重共通語言**：
+1. **GitHub** - 作為「事實」的中介（commit 不可篡改）
+2. **methodology-v2** - 作為「理解」的中介（雙方用同一套規範解讀）
+
+---
+
+### 📋 GitHub 持久化待辦 (v6.15 候選)
+
+| 優先 | 項目 | 說明 |
+|------|------|------|
+| 🔴 高 | 狀態持久化 | 任何步驟完成都 commit 到 GitHub |
+| 🔴 高 | Checkpoint 機制 | 每個 step 都是一個 checkpoint |
+| 🔴 高 | 中斷恢復 | 任一節點中斷可從 GitHub 恢復 |
+| 🔴 高 | 工具/模型切換 | 可基於 GitHub 狀態切換不同工具或模型 |
+| 🟡 中 | 狀態追蹤 | 追蹤目前在哪個 step、phase |
+
+**概念**：
+```
+Step 1 完成 → commit → GitHub
+    ↓
+中斷（網路、模型、工具...）
+    ↓
+恢復 → pull GitHub → 從 Step 2 繼續
+    ↓
+或切換工具/模型 → pull GitHub → 繼續
+```
+
+**Checkpoint 結構**：
+```
+.checkpoints/
+├── phase-1/
+│   ├── step-1-complete.lock
+│   ├── step-1-artifacts/
+│   ├── step-2-complete.lock
+│   └── step-2-artifacts/
+├── phase-2/
+│   └── ...
+└── STATE.md (目前總狀態)
+```
+
+**STATE.md 範例**：
+```markdown
+# 專案狀態
+
+## 目前進度
+- Phase: 3
+- Step: 5 (代碼實作 - 模組 B)
+- Last Checkpoint: 2026-03-31 14:50
+- Last Commit: abc1234
+
+## 可用恢复点
+- Phase 3, Step 4 ✅
+- Phase 3, Step 5 🔄 (当前)
+- Phase 3, Step 6 ⏸️
+
+## 工具/模型
+- Phase 1: GPT-4.5
+- Phase 2: Claude Opus
+- Phase 3: Claude Sonnet (目前)
+```
+
+---
+
 ### 📋 methodology-v2 分類框架（✅ 已獲實驗數據）
 
 #### 實驗數據來源
