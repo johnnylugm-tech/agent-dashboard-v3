@@ -93,7 +93,7 @@
 | Model Router | v1.0.1 | 12+ | ✅ |
 | Agent Monitor v3 | v3.2.0 | 18+ | ✅ |
 | ai-agent-toolkit | v2.1.0 | 6+ | ✅ |
-| methodology-v2 | **v6.02.0** | 70+ | ✅ |
+| methodology-v2 | **v6.08.0** | 75+ | ✅ |
 | Multi-Agent Toolkit | v0.1.0 | 框架中 | 🔄 |
 
 ---
@@ -170,6 +170,35 @@ Agent B (獨立審查，也用 methodology-v2 規範)
 **雙重共通語言**：
 1. **GitHub** - 作為「事實」的中介（commit 不可篡改）
 2. **methodology-v2** - 作為「理解」的中介（雙方用同一套規範解讀）
+
+---
+
+### 📋 跨模型分工待辦 (v6.14 候選)
+
+| 優先 | 項目 | 說明 |
+|------|------|------|
+| 🔴 高 | Phase → 模型對照表 | 每個 Phase 用最擅長性價比的模型 |
+| 🔴 高 | 模型工廠工廠 | 根據 Phase 自動選擇模型 |
+| 🔴 高 | 統一 prompt 格式 | 不同模型用相同結構的 prompt |
+| 🟡 中 | Token 監控 | 追蹤每個模型的 token 使用 |
+| 🟡 中 | 成本優化 | 簡單任務用便宜模型，複雜用強模型 |
+
+**Phase → 模型建議**：
+
+| Phase | 任務特性 | 推薦模型 | 理由 |
+|-------|----------|----------|------|
+| Phase 1 | 需求理解、規格撰寫 | Gemini 1.5 | 長上下文、便宜 |
+| Phase 2 | 架構設計、複雜分析 | Claude Opus | 深度推理 |
+| Phase 3 | 代碼實作 | Claude Sonnet | 代碼能力強、性價比高 |
+| Phase 4 | 測試設計 | GPT-4o | 多模態、平衡 |
+| Phase 5 | 驗收監控 | Claude Sonnet | 性價比高 |
+| Phase 6 | 品質分析 | Claude Opus | 深度分析 |
+| Phase 7 | 風險評估 | o3-mini | 推理+便宜 |
+| Phase 8 | 配置管理 | GPT-3.5 | 簡單任務 |
+
+**結合 v6.03.0 版本**：
+- 在 Phase Routing 表新增「模型」欄位
+- 模型工廠根據 `state.json` 的 current_phase 自動選擇
 
 ---
 
@@ -406,6 +435,8 @@ Step 1 完成 → commit → GitHub
 | 03/26 | 模組分類框架確認 (Core/Advanced/Others) |
 | 03/24 | cron-docs: AutoQualityGate 644→200 問題優化 |
 | 03/31 | cron-docs: 提交成功，修復 git push 問題 |
+| 03/31 10:53 | cron-docs 執行成功，v5.9.0→v6.02.0 |
+| 03/31 15:57 | methodology-v2 v6.08.0，本地有未提交變更 |
 
 ### ✅ Q1 總結 (2026-01 至 2026-03)
 
@@ -430,8 +461,9 @@ Step 1 完成 → commit → GitHub
 
 | 問題 | 頻率 | 狀態 |
 |------|------|------|
-| Git Push 失敗 | 03/24, 03/31 重現 | ✅ 已修復 (需在 cron 前加 pull --rebase) |
+| Git Push 失敗 | 03/24, 03/31 重現 | ✅ 已修復 (git pull --rebase) |
 | Trend Cron 0 產出 | 03/31 | ⚠️ 需要檢討 |
+| 未提交變更累積 | 03/31 15:57 | 🔴 待處理 (3 新檔案 + cli.py) |
 
 ---
 
