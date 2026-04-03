@@ -93,7 +93,7 @@
 | Model Router | v1.0.1 | 12+ | ✅ |
 | Agent Monitor v3 | v3.2.0 | 18+ | ✅ |
 | ai-agent-toolkit | v2.1.0 | 6+ | ✅ |
-| methodology-v2 | **v6.22.0** | 140+ | ✅ |
+| methodology-v2 | **v6.24.0** | 140+ | ✅ |
 | Multi-Agent Toolkit | v0.1.0 | 框架中 | 🔄 |
 
 ---
