@@ -93,7 +93,7 @@
 | Model Router | v1.0.1 | 12+ | ✅ |
 | Agent Monitor v3 | v3.2.0 | 18+ | ✅ |
 | ai-agent-toolkit | v2.1.0 | 6+ | ✅ |
-| methodology-v2 | **v6.08.0** | 75+ | ✅ |
+| methodology-v2 | **v6.21.0** | 140+ | ✅ |
 | Multi-Agent Toolkit | v0.1.0 | 框架中 | 🔄 |
 
 ---
@@ -112,6 +112,19 @@
 | 🔴 高 | methodology-v2 模組分類 | ✅ 實驗數據已取得，待完整盤點 |
 | 🟢 低 | CI/CD 自動化 | GitHub Actions（環境相依，可選） |
 | 🟢 低 | 效能優化 | Result caching 機制（可選功能） |
+
+### 📋 Sub-agent 管理強化 (v6.20 ✅ 完成)
+
+整合 Clawd-Code s04/s06/s07 + 實務痛點對策
+
+| 優先 | 項目 | 說明 | 來源 |
+|------|------|------|------|
+| 🔴 高 | **s04 Subagent 隔離** | sessions_spawn 獨立 fresh messages[] + 結果合併規範 | Clawd-Code s04 |
+| 🔴 高 | **結構化輸出規範** | Agent 回傳必須含 result/confidence/citations/status | 實務痛點 #1 |
+| 🔴 高 | **產物版本控制** | 結合 Git：commit hash + version 追蹤 | 實務痛點 #4 |
+| 🟡 中 | **s06 Context Compression** | L1 摘要 / L2 提取 / L3 存檔 三層壓縮 | Clawd-Code s06 |
+| 🟡 中 | **Timeout 配置** | 每個工具呼叫/Step 的硬性超時規範 | 實務痛點 #3 |
+| 🟡 中 | **s07 Task System** | task.json + dependency graph + 跨 session 持久化 | Clawd-Code s07 |
 
 ---
 
@@ -1027,6 +1040,40 @@ python cli.py resources list
 6. 發布 GitHub
 
 *最後更新：2026-03-20 21:14*
+
+---
+
+## 🔴 Framework Bug 修復 (04/01)
+
+### Bug 修復記錄
+
+| # | Bug | 狀態 | 修復 |
+|---|-----|------|------|
+| 1 | `constitution --type sad` SAD.md 位置 | ✅ | `__init__.py`: 搜尋 parent dir |
+| 2 | `Security Architecture` 關鍵字不足 | ✅ | `sad_constitution_checker.py`: 加入「安全設計」等關鍵字 |
+| 3 | L1/L2/L3/L4 等級檢測過嚴 | ✅ | `sad_constitution_checker.py`: 改用 any() + 中文關鍵字 |
+| 4 | `doc_checker.py` 不搜 `02-architecture/` | ✅ | `find_documentation_files()`: 加入 `02-architecture/` 搜尋路徑 |
+
+### Commit
+- `dd1c6c5` - fix: 3 framework bugs for Phase 2 SAD validation
+
+### Johnny 新建 phase_auditor.py (04/01)
+- `scripts/phase_auditor.py` — 基於 GitHub commit 的獨立審計工具
+- 支援 `--repo owner/repo --phase N --output markdown --save FILE`
+- 產出：14 PASS 項目，5 WARNING，**Phase 2 審計通過 ✅**
+
+### tts-kokoro-v613 Phase 3 實作中 (04/02 更新)
+- Phase 2: ✅ 100.0/100 (18 PASS, 0 WARNING)
+- Phase 3: 🔄 Module 4 SynthEngine + CircuitBreaker 4.1 完成 ✅
+- GitHub: `38337f6` (SynthEngine + asyncio 15 tests + Logic Review)
+- Framework: v6.14.0+
+
+### tts-kokoro-v613 Phase 2 審核完成 (04/01)
+- Phase 2: **APPROVED** — Constitution 92.9%
+- GitHub: `e5103c2` → `6a3fb95`
+- Report: `00-summary/Phase2_ThirdParty_Audit_v2.md`
+- **phase_auditor.py: 18 PASS ✅** (STAGE_PASS/Constitution/Audit/5W1H/Integrity全通過)
+- Bug #1-4: ✅ 全部修復
 
 ---
 
