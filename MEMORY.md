@@ -38,6 +38,110 @@
 
 ---
 
+## 昨夜 Framework Bug 修復 (2026-04-14 01:00-02:30)
+
+### v7.99 共修復 11 個 Bugs
+
+| Bug # | 問題 | 檔案 |
+|-------|------|------|
+| #1 | phase_artifact_enforcer alt_dirs 缺少 05-verify | phase_artifact_enforcer.py |
+| #2 | constitution/__init__.py 不搜 05-verify/ | constitution/__init__.py |
+| #3 | Python Scoping Bug (Path shadow) | multi |
+| #4 | phase_prerequisite_checker 路徑不完整 | phase_prerequisite_checker.py |
+| #5 | Phase 5 output_dir 仍是 05-baseline | phase_config.py |
+| #6 | verification_constitution_checker glob() 搜錯路徑 | verification_constitution_checker.py |
+| #7 | load_constitution_documents SAD*.md 匹配錯誤 | constitution/__init__.py |
+| #8 | Phase 3/4/5 無 Security 檢查 | srs/sad/verification checkers |
+| #9 | 替代路徑違反 Johnny 設計原則 | phase_paths.py + 所有 consumers |
+| #10 | SRSChecklist.review_status 缺失 | srs_constitution_checker.py |
+| #11 | doc_checker 只搜 3 個目錄 | doc_checker.py |
+
+---
+
+## Framework Bug 修復 (2026-04-16 22:00-00:17)
+
+### Phase 6/7/8 Bug（v7.99 補充）
+
+| Bug # | 問題 | 檔案 | Commit |
+|-------|------|------|--------|
+| B-12 | Phase 6 `PHASE_ARTIFACT_PATHS` 是 string 而非 list | `phase_paths.py` | `5e06e55` |
+| B-13 | Phase 7 checker 檢查不存在的 `RISK_ASSESSMENT.md` | `risk_management_constitution_checker.py` | `5e06e55` |
+| B-14 | Phase 7 mitigation plans 檢查錯誤檔案 | `risk_management_constitution_checker.py` | `5e06e55` |
+| B-15 | Phase 7/8 `PHASE_ARTIFACT_PATHS` 是 string 而非 list | `phase_paths.py` | `5e06e55` |
+
+---
+
+## methodology-v2 版本狀態 (2026-04-16)
+
+### GitHub Releases
+| Release | Commit | 主要內容 |
+|---------|--------|---------|
+| v8.0 | 4de743c | Ralph Mode 整合 + E2E tests，TH-05/06 → >90%，TH-14 → =100%，TH-15 → >90% |
+| v8.1 | 7b8aa3b | TH threshold consistency across all phases |
+| v8.2 | 875d3e5 | TH-05 and TH-06 both raised to >90% |
+| v8.3 | b699022 | TH-14 raised to =100% |
+| v8.4 | 4f263af | TH-15 raised to >90% |
+| v8.5 | 309425a | Phase-specific deliverable checklists + TH-15 thresholds |
+| v8.6 | 94e7631 | cli_phase_prompts TH-06 → >90% |
+
+### 本地 vs GitHub
+- **本地** `skills/methodology-v2/`: v8.6-1-g6c21207 (已 push + release) ✅
+- **GitHub**: v8.6 (已同步) ✅
+- **本地** `workspace-musk/`: v6.59.0 (落後)
+
+---
+
+## Ralph Mode 驗證失敗 (2026-04-16)
+
+### 根本問題
+目標混淆：聲稱「驗證 Ralph Mode」，實際只測試了 Alert script 能發訊息。
+
+### 教訓（已內化到 SOUL.md）
+1. **目標要具體化**：不能只說「驗證」，要說清楚驗證什麼
+2. **工具 vs 系統**：「script 能跑」≠「自動化系統在跑」
+3. **及時說「我不知道」**：不確定時先確認，不假裝知道
+
+### Ralph Mode 現狀
+- Alert script: ✅ 可用
+- Bot 對話: ✅ 已建立
+- **自動化監控: ❌ 未實作**
+
+---
+
+## 專案 tts-kokoro-v613 路徑修復
+- fr_mapping.json: `./` → `03-development/.methodology/`
+- QUALITY_REPORT.md: `05-verify/` → `06-quality/`
+- MONITORING_PLAN.md: `root` → `06-quality/`
+
+### v7.99 共修復 11 個 Bugs
+
+| Bug # | 問題 | 檔案 |
+|-------|------|------|
+| #1 | phase_artifact_enforcer alt_dirs 缺少 05-verify | phase_artifact_enforcer.py |
+| #2 | constitution/__init__.py 不搜 05-verify/ | constitution/__init__.py |
+| #3 | Python Scoping Bug (Path shadow) | multi |
+| #4 | phase_prerequisite_checker 路徑不完整 | phase_prerequisite_checker.py |
+| #5 | Phase 5 output_dir 仍是 05-baseline | phase_config.py |
+| #6 | verification_constitution_checker glob() 搜錯路徑 | verification_constitution_checker.py |
+| #7 | load_constitution_documents SAD*.md 匹配錯誤 | constitution/__init__.py |
+| #8 | Phase 3/4/5 無 Security 檢查 | srs/sad/verification checkers |
+| #9 | 替代路徑違反 Johnny 設計原則 | phase_paths.py + 所有 consumers |
+| #10 | SRSChecklist.review_status 缺失 | srs_constitution_checker.py |
+| #11 | doc_checker 只搜 3 個目錄 | doc_checker.py |
+
+### 專案 tts-kokoro-v613 路徑修復
+- fr_mapping.json: `./` → `03-development/.methodology/`
+- QUALITY_REPORT.md: `05-verify/` → `06-quality/`
+- MONITORING_PLAN.md: `root` → `06-quality/`
+
+### Johnny 設計原則（v7.99）
+> 每個階段有什麼產物放在什麼地方都是很明確的，不應該有替代路徑這種模糊的地方。
+
+- Phase 1-8 所有 artifact 位置已確認並記錄
+- Phase 6 Pre-flight 應該通過
+
+---
+
 ## 目標
 
 - 建立多Agent協作系統
@@ -157,3 +261,100 @@
 6. Monitor → 監控整合
 
 *最後更新: 2026-03-21 01:41*
+
+---
+
+## methodology-v2 最新狀態 (2026-04-12)
+
+### 版本
+- **Current**: v7.51
+- **Repo**: https://github.com/johnnylugm-tech/methodology-v2
+
+### Section 10.5 自動化狀態
+| 功能 | 狀態 |
+|------|------|
+| Layer 1-3 檢查 | ✅ check_fr_full.py |
+| SAB 生成 | ✅ Phase 2 stage-pass 自動 |
+| Self-Correction | ❌ Pending |
+| Feedback Loop | ❌ Pending |
+| Steering Loop | ❌ Pending |
+
+### 關鍵腳本
+| 腳本 | 用途 |
+|------|------|
+| generate_fr_mapping.py | FR→Code 映射（FR Tag 解析）|
+| check_fr_quality.py | 每個 FR 快速檢查 |
+| check_fr_full.py | 三層統一檢查 |
+| generate_sab.py | SAD→SAB 轉換 |
+
+### FR Tag 解析
+- 解析 [FR-XX] docstring pattern
+- 準確率：9/9 FRs (100%)
+- 取代 keyword matching
+
+## Ralph Mode v1.1 完成 (2026-04-15)
+
+### Alert System
+- 等級: INFO/SUCCESS → Console only; WARNING/CRITICAL → Telegram + Console
+- 設定檔: `~/.ralph_alert_config.json` (home directory)
+- Bot: @LittleRalphMode_bot, Token: `8788841675:AAFwjQLOH...`, Chat: 7550668951
+
+### 修復的 Bug
+- cli.py: sop_content 變數順序
+- schema_validator.py: JSONL 格式支援
+- lifecycle.py: _read_log json parsing
+
+### Phase 狀態
+- Phase 5: ✅ 完成
+- Phase 6: ✅ Reset 到 Phase 5 點
+- Phase 7: 待執行
+
+### 待修: Telegram Alert
+- Johnny 需和 Bot 建立對話
+- Bot: @LittleRalphMode_bot
+
+---
+
+## AutoResearch 教訓 (2026-04-18)
+
+### 背景
+Johnny 要我用 auto-research 提升 methodology-v2 Features #1-5 的品質。在過程中我犯了多個根本性錯誤。
+
+### 錯誤清單
+
+| # | 錯誤 | 代價 | 內化原則 |
+|---|------|------|----------|
+| 1 | 跳過 Phase Review 直接推進 | 浪費時間在錯誤架構上 | 每 phase 完成後必須停下來驗證 |
+| 2 | 假設 event 通知會自動送到 | Johnny 問才知道 session 結束 | 沒有回報就主動去查 |
+| 3 | 部分驗證宣布「已驗證」| 基準從一開始就錯（7 errors → 57 errors）| 全部遍歷，部分驗證 = 沒有驗證 |
+| 4 | 信任 Dashboard 而非原始工具 | D9 顯示 95.8%，實際 0% | 看數字之前先看原始輸出 |
+| 5 | 每輪只修特定維度 | 發現的問題被跳過 | 每 iteration 修所有有問題的維度 |
+| 6 | 分數是目標，達標就停 | 軟體品質沒有真正提升 | 真正目標是品質，分數只是測量工具 |
+| 7 | 最終 report 等於透明 | 無法確認到底跑了幾輪 | 每 iteration 必須中斷 report |
+
+### 核心原則（已內化）
+
+1. 看見數字 ≠ 數字正確（工具可能壞、公式可能錯）
+2. 驗證原始輸出（Dashboard 只是加工過的結果）
+3. 全部遍歷（部分驗證 = 沒有驗證）
+4. 主動追蹤（不要假設通知會自動送到）
+5. 發現就修（與分數無關，真正目標是品質）
+6. 每 iteration 修所有維度（不是每輪只修一個）
+7. 過程透明度從一開始（不是事後補）
+8. 目標：品質 > 分數
+
+### 正確流程
+
+每次 AutoResearch 必須：
+1. **基準建立**：跑所有 9 個維度的原始工具命令，記錄原始輸出
+2. **每 iteration**：修所有 < 85% 的維度，不是只修一個
+3. **每 iteration 中斷**：report 進度，驗證後才繼續
+4. **最終驗證**：所有 9 個維度重新跑一次
+5. **Commit**：結構化 message，包含分數對比
+
+### 文件位置
+
+- `auto-research/AUTO_RESEARCH_ARCHITECTURE.md` — 架構與使用方法
+- `methodology-v2/AUTO_RESEARCH_PROCESS_LOG.md` — 過程透明度模板
+
+*最後更新：2026-04-18 01:03 GMT+8*
